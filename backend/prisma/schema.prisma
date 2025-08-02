@@ -55,7 +55,8 @@ model Alert {
 }
 
 model Subscription {
-  clientId String @id
-  active   Boolean @default(true)
+  clientId  String   @id
+  status    String   @default("ACTIVE")
+  expiresAt DateTime
   createdAt DateTime @default(now())
 }
