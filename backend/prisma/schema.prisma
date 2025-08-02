@@ -1,0 +1,61 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  reference String
+  amount    Float
+  status    String
+  createdAt DateTime @default(now())
+  settlement Settlement?
+}
+
+model Settlement {
+  id        Int      @id @default(autoincrement())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int      @unique
+  status    String
+  createdAt DateTime @default(now())
+}
+
+model Withdrawal {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  status    String
+  createdAt DateTime @default(now())
+}
+
+model CallbackJob {
+  id        Int      @id @default(autoincrement())
+  url       String
+  payload   String
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ReconciliationRun {
+  id        Int      @id @default(autoincrement())
+  startedAt DateTime
+  finishedAt DateTime?
+  status    String
+}
+
+model Alert {
+  id           Int      @id @default(autoincrement())
+  message      String
+  createdAt    DateTime @default(now())
+  acknowledged Boolean  @default(false)
+}
+
+model Subscription {
+  clientId String @id
+  active   Boolean @default(true)
+  createdAt DateTime @default(now())
+}
